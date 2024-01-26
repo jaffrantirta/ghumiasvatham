@@ -1,17 +1,30 @@
 "use client";
 import { store } from "@/connection/context/UserContext";
+import { supabase } from "@/connection/supabase";
 import { Button, Label, TextInput } from "flowbite-react";
+import { useState } from "react";
+import Swal from "sweetalert2";
 
 export default function Home() {
-  const executeSubmit = (e) => {
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const executeSubmit = async (e) => {
     e.preventDefault();
-    const { error } = store({
-      name: "Burhan",
-      phone: "767565577",
-      email: "hhhh@ygtyg",
+    const { error } = await store({
+      name: name,
+      phone: phone,
+      email: email,
     });
-    console.log(error, "error");
-    console.log("hai");
+
+    error ? Swal.fire("Error") : success();
+  };
+
+  const success = () => {
+    Swal.fire("Berhasil");
+    setEmail("");
+    setName("");
+    setPhone("");
   };
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
@@ -20,15 +33,29 @@ export default function Home() {
         <form onSubmit={executeSubmit}>
           <div>
             <Label>Nama</Label>
-            <TextInput placeholder="Masukan nama" />
+            <TextInput
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Masukan nama"
+            />
           </div>
           <div>
             <Label>Nomor WhatsApp</Label>
-            <TextInput placeholder="Masukan nomor WhatsApp" />
+            <TextInput
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              type="number"
+              placeholder="Masukan nomor WhatsApp"
+            />
           </div>
           <div>
             <Label>Email</Label>
-            <TextInput placeholder="Masukan email" />
+            <TextInput
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              type="email"
+              placeholder="Masukan email"
+            />
           </div>
           <div className="pt-3">
             <Button type="submit">Submit</Button>
